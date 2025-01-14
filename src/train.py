@@ -41,7 +41,8 @@ class ProjectAgent:
         return
     
     def load(self): 
-        path="tree/model.pickle"
+        #path="tree/model.pickle"
+        path="model.pickle"
         self.Qfunctions = pickle.load(open(path, "rb"))
         return
 
