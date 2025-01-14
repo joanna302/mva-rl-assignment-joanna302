@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn 
 import random
 from copy import deepcopy
-import matplotlib.pyplot as plt 
+#import matplotlib.pyplot as plt 
 import pickle 
 
 from gymnasium.wrappers import TimeLimit
@@ -109,8 +109,8 @@ class ProjectAgent:
                 state = next_state
 
         self.save('tree/')
-        plt.plot(episode_return)
-        plt.show()
+        #plt.plot(episode_return)
+        #plt.show()
         return self.Qfunctions
     
       
