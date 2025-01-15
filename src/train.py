@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn 
 import random
 from copy import deepcopy
-#import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt 
 import pickle 
 
 from gymnasium.wrappers import TimeLimit
@@ -28,8 +28,8 @@ class ProjectAgent:
         #self.init_buffer()
         #print('Buffer initialized')
         self.nb_iter=10
-        self.max_episode=100
-        #self.Qfunctions = self.fqi(0.98)
+        self.max_episode=500
+        self.Qfunctions = self.fqi(0.98)
 
     def act(self, observation, use_random=False):
         action=self.greedy_action(self.Qfunctions[-1], observation)
@@ -41,8 +41,8 @@ class ProjectAgent:
         return
     
     def load(self): 
-        #path="tree/model.pickle"
-        path="model.pickle"
+        path="tree/model.pickle"
+        #path="model.pickle"
         self.Qfunctions = pickle.load(open(path, "rb"))
         return
 
@@ -110,8 +110,8 @@ class ProjectAgent:
                 state = next_state
 
         self.save('tree/')
-        #plt.plot(episode_return)
-        #plt.show()
+        plt.plot(episode_return)
+        plt.show()
         return self.Qfunctions
     
       
