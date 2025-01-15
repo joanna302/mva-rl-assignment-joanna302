@@ -28,7 +28,7 @@ class ProjectAgent:
         #self.init_buffer()
         #print('Buffer initialized')
         self.nb_iter=10
-        self.max_episode=10
+        self.max_episode=100
         #self.Qfunctions = self.fqi(0.98)
 
     def act(self, observation, use_random=False):
@@ -72,23 +72,23 @@ class ProjectAgent:
                     S, A, R, S2, D = self.memory.sample_memory()
                     nb_samples = S.shape[0]
                     SA = np.append(S,A,axis=1)
-                    for iter in range(self.nb_iter):
-                        if iter==0 & episode==0:
-                            value=R.copy()
-                        else: 
-                            Q2 = np.zeros((nb_samples,self.nb_actions))
-                            for a2 in range(self.nb_actions):
-                                A2 = a2*np.ones((S.shape[0],1))
-                                S2A2 = np.append(S2,A2,axis=1)
-                                Q2[:,a2] = (self.Qfunctions[-1]).predict(S2A2)
-                            max_Q2 = np.max(Q2,axis=1)
-                            value = R + gamma*(1-D)*max_Q2
+                    if len(self.Qfunctions)==0 : 
+                        value=R.copy()
                         Q = HistGradientBoostingRegressor()
                         Q.fit(SA,value)
                         self.Qfunctions.append(Q)
-                        if len(self.Qfunctions)>1:
-                            self.Qfunctions.pop(0)
-
+                    if step%batch_size==0: 
+                        Q2 = np.zeros((nb_samples,self.nb_actions))
+                        for a2 in range(self.nb_actions):
+                            A2 = a2*np.ones((S.shape[0],1))
+                            S2A2 = np.append(S2,A2,axis=1)
+                            Q2[:,a2] = (self.Qfunctions[-1]).predict(S2A2)
+                        max_Q2 = np.max(Q2,axis=1)
+                        value = R + gamma*(1-D)*max_Q2
+                        Q = HistGradientBoostingRegressor()
+                        Q.fit(SA,value)
+                        self.Qfunctions.append(Q)
+                        self.Qfunctions.pop(0)
                     action = self.greedy_action(self.Qfunctions[-1], state)
             step=step+1
              # step
